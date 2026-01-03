@@ -20,7 +20,10 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Compile Java source files
+    - name: Compile Java source files (excluding JavaFX UI)
       run: |
         mkdir -p out
-        javac -d out $(find . -name "*.java")
+        find . -name "*.java" \
+          ! -path "*ui*" \
+          | xargs javac -d out
+
