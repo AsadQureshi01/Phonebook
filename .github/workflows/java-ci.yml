@@ -1,4 +1,4 @@
-name: Java CI (Plain Java Project)
+name: Java CI with JavaFX
 
 on:
   push:
@@ -20,10 +20,16 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Compile Java source files (excluding JavaFX UI)
+    - name: Download JavaFX SDK
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openjfx
+
+    - name: Compile Java project including JavaFX
       run: |
         mkdir -p out
-        find . -name "*.java" \
-          ! -path "*ui*" \
-          | xargs javac -d out
-
+        javac \
+          --module-path /usr/share/openjfx/lib \
+          --add-modules javafx.controls,javafx.fxml \
+          -d out \
+          $(find . -name "*.java")
